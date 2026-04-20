@@ -4,7 +4,7 @@
 // Relative URL only works when HTML is served BY the backend.
 // Since HTML files are opened directly from file://, we must use
 // the full absolute URL so API calls reach the Spring Boot server.
-const API_BASE ='https://hanuman-sangam-backend.onrender.com/api';
+const API_BASE = "https://hanuman-sangam-backend.onrender.com/api?v=2";
 
 // ── Session helpers ───────────────────────────
 function getToken()      { return localStorage.getItem('hs_token'); }
