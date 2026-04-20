@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home — Hanuman Sangam</title>
+  <link rel="stylesheet" href="css/home.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">🛕 Hanuman Sangam</div>
+  <ul class="nav-links">
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="member-dashboard.html">Dashboard</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user" id="navUser">Welcome</span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- HERO / TOTAL COLLECTION -->
+<section class="hero">
+  <div class="hero-icon">🛕</div>
+  <h1>Hanuman Sangam</h1>
+  <p class="hero-tagline">एकता | भक्ति | सेवा — Unity · Devotion · Service</p>
+  <div class="collection-card">
+    <div class="collection-label">💰 Total Sangam Collection</div>
+    <div class="collection-amount" id="totalAmount">₹0</div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="home-container">
+
+  <!-- Quick Info Cards -->
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-icon">👥</div>
+      <h3>Our Members</h3>
+      <p>12 dedicated members + 1 cashier managing all Sangam finances with full transparency.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🛕</div>
+      <h3>Temple History</h3>
+      <p>A sacred place where devotees gather for blessings, prayer, and community service.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🎯</div>
+      <h3>Our Purpose</h3>
+      <p>Maintain transparency, discipline, and unity among all members of the Sangam.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">❤️</div>
+      <h3>Community Service</h3>
+      <p>Food distribution, education support, and charitable work throughout the year.</p>
+    </div>
+  </div>
+
+  <!-- Upcoming Events -->
+  <div class="events-section">
+    <h2>📅 Upcoming Events</h2>
+    <div class="events-grid">
+      <div class="event-card">
+        <div class="event-date-badge">
+          <div class="day">2</div>
+          <div class="month">Apr</div>
+        </div>
+        <div class="event-info">
+          <h4>Hanuman Jayanti Puja</h4>
+          <p>🕌 Temple Premises · All members invited</p>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-date-badge">
+          <div class="day">12</div>
+          <div class="month">May</div>
+        </div>
+        <div class="event-info">
+          <h4>Monthly Satsang</h4>
+          <p>🎵 Community Hall · Bhajan & Pravachan</p>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-date-badge">
+          <div class="day">5</div>
+          <div class="month">Jun</div>
+        </div>
+        <div class="event-info">
+          <h4>Monthly Meeting</h4>
+          <p>📋 Member Assembly · 7:00 PM onwards</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly Meeting -->
+  <div class="meeting-card">
+    <div class="meeting-icon">🕒</div>
+    <div class="meeting-info">
+      <h3>🔔 Sangam Monthly Meeting</h3>
+      <div class="meeting-meta">
+        <span class="meta-pill">📅 Every 5th of Month</span>
+        <span class="meta-pill">⏰ 7:00 PM</span>
+        <span class="meta-pill">📍 Sangam Hall</span>
+        <span class="meta-pill">👥 All Members</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer><p>© 2022 Hanuman Sangam | Jai Hanuman 🙏 | All Rights Reserved</p></footer>
+<div id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

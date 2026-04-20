@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Member Dashboard — Hanuman Sangam</title>
+  <link rel="stylesheet" href="css/dashboard.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">🛕 Hanuman Sangam</div>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="member-dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user" id="navUser">Welcome</span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- OFFLINE BANNER -->
+<div id="offlineBanner" class="offline-banner" style="display:none;">
+  ⚠️ Cannot reach server. Check backend at <strong>localhost:8080</strong>.
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">👤 Member Dashboard</div>
+      <p class="page-sub">View payments, announcements and all member records</p>
+    </div>
+    <span class="live-pill">
+      <span class="live-dot"></span> Live
+    </span>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="sum-card card-paid">
+      <div class="sum-icon">✅</div>
+      <div>
+        <div class="sum-label">My Total Paid</div>
+        <div class="sum-value" id="totalPaid">₹0</div>
+      </div>
+    </div>
+    <div class="sum-card card-pending">
+      <div class="sum-icon">⏳</div>
+      <div>
+        <div class="sum-label">My Total Pending</div>
+        <div class="sum-value" id="totalPending">₹0</div>
+      </div>
+    </div>
+    <div class="sum-card card-due">
+      <div class="sum-icon">📅</div>
+      <div>
+        <div class="sum-label">Next Due Date</div>
+        <div class="sum-value" id="dueDate">5th</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcements -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">📢 Announcements</div>
+    </div>
+    <div class="section-card-body">
+      <div class="announce-list" id="announceList">
+        <p class="text-muted" style="font-style:italic">Loading announcements…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search + Members Table -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">👥 All Members</div>
+      <span class="member-count" id="memberCount"
+            style="font-size:.82rem;color:var(--text-muted);background:var(--bg2);
+                   padding:.25rem .7rem;border-radius:20px;font-weight:600;">
+        0 members
+      </span>
+    </div>
+    <div class="section-card-body" style="padding-bottom:0">
+      <div class="search-bar" style="margin-bottom:1rem">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput"
+               placeholder="Search member by name or mobile…"
+               autocomplete="off"/>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Paid (₹)</th>
+            <th>Pending (₹)</th>
+            <th>Contact</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="memberTable">
+          <tr><td colspan="6" class="empty-state skeleton-row">Loading members…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- My Payment History -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">💳 My Payment History</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Amount (₹)</th>
+            <th>Type</th>
+            <th>Note</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="paymentTable">
+          <tr><td colspan="6" class="empty-state skeleton-row">Loading payments…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer><p>© 2022 Hanuman Sangam | Jai Hanuman 🙏</p></footer>
+<div id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/member-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Hanuman Sangam</title>
+  <link rel="stylesheet" href="css/admin-dashboard.css"/>
+</head>
+<body>
+
+<!-- OFFLINE BANNER -->
+<div id="offlineBanner" class="offline-banner" style="display:none;">
+  ⚠️ Cannot reach server. Showing cached data. Check backend at <strong>localhost:8080</strong>.
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">🔔 Hanuman Sangam Admin</div>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="admin-dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user" id="navUsername">Admin</span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ① Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">💼 Admin Dashboard</div>
+      <div class="page-subtitle">Manage member payments &amp; approvals</div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div> Live
+    </div>
+  </div>
+
+  <!-- ② Stat Cards -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div>
+        <div class="stat-label">Total Collection</div>
+        <div class="stat-value" id="statTotalCollection">
+          <span class="skeleton-val">Loading…</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏳</div>
+      <div>
+        <div class="stat-label">Total Pending</div>
+        <div class="stat-value" id="statTotalPending">
+          <span class="skeleton-val">Loading…</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div>
+        <div class="stat-label">Pending Approvals</div>
+        <div class="stat-value" id="statPendingMembers">
+          <span class="skeleton-val">…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ Record Payment -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">💳 Record Payment</div>
+    </div>
+    <div class="section-card-body">
+      <div class="payment-form">
+
+        <div class="form-group" style="flex:2;min-width:180px;">
+          <label class="form-label">Member</label>
+          <select id="selectMember">
+            <option value="">— Select Member —</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="flex:1.5;min-width:140px;">
+          <label class="form-label">Amount (₹)</label>
+          <input type="number" id="paymentAmount"
+                 placeholder="Enter amount" min="1" step="1"/>
+        </div>
+
+        <div class="form-group" style="flex:1.2;min-width:130px;">
+          <label class="form-label">Payment Type</label>
+          <select id="paymentType">
+            <option value="MONTHLY">Monthly Payment</option>
+            <option value="ANNUAL">Annual Payment</option>
+            <option value="DONATION">Donation</option>
+            <option value="FESTIVAL">Festival</option>
+            <option value="PUJA">Puja</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="flex:1.2;min-width:120px;">
+          <label class="form-label">Status</label>
+          <select id="paymentStatus">
+            <option value="PAID">✅ Paid</option>
+            <option value="UNPAID">⏳ Unpaid</option>
+          </select>
+        </div>
+
+        <div class="form-group btn-form-group" style="min-width:160px;">
+          <label class="form-label">&nbsp;</label>
+          <div class="btn-group">
+            <button class="btn btn-add" id="btnAdd"
+                    onclick="recordPayment('ADD')">
+              ＋ Add
+            </button>
+            <button class="btn btn-subtract" id="btnSubtract"
+                    onclick="recordPayment('SUBTRACT')">
+              − Subtract
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ Update Home Page Stats -->
+  <div class="section-card">
+    <div class="stats-update-header">
+      <div class="stats-update-title">
+        📊 Update Home Page Stats
+        <span class="mode-badge mode-manual" id="modeBadge">Manual Mode</span>
+      </div>
+    </div>
+    <div class="section-card-body">
+      <div class="stats-update-grid">
+        <div class="form-group">
+          <label class="form-label">Total Collection (₹)</label>
+          <input class="form-input" type="number"
+                 id="inputTotalCollection" placeholder="e.g. 15000" min="0"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total Paid (₹)</label>
+          <input class="form-input" type="number"
+                 id="inputTotalPaid" placeholder="e.g. 12000" min="0"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total Unpaid (₹)</label>
+          <input class="form-input" type="number"
+                 id="inputTotalUnpaid" placeholder="e.g. 3000" min="0"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pending Members (count)</label>
+          <input class="form-input" type="number"
+                 id="inputPendingMembers" placeholder="e.g. 5" min="0"/>
+        </div>
+      </div>
+      <div class="stats-update-actions">
+        <button class="btn btn-primary" id="btnSaveManual"
+                onclick="saveStatsManual()">
+          💾 Save Manual Values
+        </button>
+        <span class="divider-text">— OR —</span>
+        <button class="btn btn-auto" id="btnAutoCalc"
+                onclick="saveStatsAuto()">
+          ⚡ Auto-Calculate from Payments
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ Send Announcement -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">📣 Send Announcement</div>
+    </div>
+    <div class="section-card-body">
+      <div class="announcement-form">
+        <div class="form-group" style="flex:1;min-width:200px;">
+          <label class="form-label">Title</label>
+          <input type="text" id="announcementTitle"
+                 placeholder="Announcement title…"/>
+        </div>
+        <div class="form-group" style="flex:2.5;min-width:260px;">
+          <label class="form-label">Message</label>
+          <input type="text" id="announcementMessage"
+                 placeholder="Message to all members…"/>
+        </div>
+        <div class="form-group btn-form-group">
+          <label class="form-label">&nbsp;</label>
+          <button class="btn btn-primary" id="btnAnnounce"
+                  onclick="sendAnnouncement()">
+            📣 Send to All
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ Approved Members Table -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">✅ Approved Members</div>
+      <div class="header-right">
+        <span class="member-count" id="approvedCount">0 members</span>
+        <button class="btn btn-secondary btn-sm"
+                onclick="loadAdminDashboard()">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Paid (₹)</th>
+            <th>Pending (₹)</th><th>Contact</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="approvedMembersBody">
+          <tr><td colspan="6" class="empty-state skeleton-row">Loading members…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ⑦ Pending Approvals Table -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">🟡 Pending Approvals</div>
+      <div class="header-right">
+        <span class="member-count" id="pendingCount">0 pending</span>
+        <button class="btn btn-secondary btn-sm"
+                onclick="loadAdminDashboard()">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Email</th>
+            <th>Mobile</th><th>Registered</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="pendingMembersBody">
+          <tr><td colspan="6" class="empty-state skeleton-row">Loading approvals…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- CONFIRM MODAL -->
+<div id="confirmModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-icon" id="modalIcon">⚠️</div>
+    <div class="modal-title" id="modalTitle">Confirm Action</div>
+    <div class="modal-msg" id="modalMsg">Are you sure?</div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmAction()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<footer><p>© 2022 Hanuman Sangam Admin | Jai Hanuman 🙏</p></footer>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/admin-dashboard.js"></script>
+</body>
+</html>

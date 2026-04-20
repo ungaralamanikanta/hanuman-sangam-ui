@@ -1,0 +1,35 @@
+@import 'vars.css';
+
+.dash-container { max-width:1100px; margin:0 auto; padding:1.5rem 1rem 3rem; }
+
+/* Page header */
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+.page-title  { font-size:1.4rem; font-weight:800; }
+.page-sub    { color:var(--text-muted); font-size:.88rem; margin-top:.2rem; }
+.live-pill   { display:flex; align-items:center; gap:.4rem; background:var(--green-light); color:var(--green); padding:.35rem .85rem; border-radius:20px; font-size:.82rem; font-weight:700; }
+.live-dot    { width:8px; height:8px; border-radius:50%; background:var(--green); animation:blink 1.2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* Summary cards */
+.summary-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+.sum-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.2rem; display:flex; align-items:center; gap:1rem; box-shadow:var(--shadow); }
+.sum-icon  { font-size:1.8rem; }
+.sum-label { font-size:.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; }
+.sum-value { font-size:1.3rem; font-weight:800; margin-top:.15rem; }
+.card-paid    .sum-value { color:var(--green); }
+.card-pending .sum-value { color:var(--yellow); }
+.card-due     .sum-value { color:var(--blue); font-size:1rem; }
+
+/* Announcements */
+.announce-list   { display:flex; flex-direction:column; gap:.75rem; }
+.announce-item   { background:var(--saffron-light); border-left:4px solid var(--saffron); padding:.75rem 1rem; border-radius:8px; }
+.announce-title  { font-weight:700; font-size:.95rem; margin-bottom:.2rem; }
+.announce-msg    { font-size:.88rem; color:var(--text); line-height:1.5; }
+.announce-date   { font-size:.75rem; color:var(--text-muted); margin-top:.35rem; }
+
+/* Search bar */
+.search-bar { display:flex; align-items:center; gap:.5rem; background:var(--bg2); border:1.5px solid var(--border); border-radius:10px; padding:.4rem .85rem; }
+.search-icon { font-size:1rem; }
+.search-bar input { background:transparent; border:none; outline:none; flex:1; font-size:.9rem; padding:0; box-shadow:none; }
+
+.text-muted { color:var(--text-muted); }

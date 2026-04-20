@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — Hanuman Sangam</title>
+  <link rel="stylesheet" href="css/contact.css"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">🛕 Hanuman Sangam</div>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="member-dashboard.html">Dashboard</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="nav-user" id="navUser">Welcome</span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="contact-container">
+
+  <div class="contact-hero">
+    <h1>📩 Contact Us</h1>
+    <p>Have a problem or suggestion? Send a message directly to admin. 🙏</p>
+  </div>
+
+  <div class="contact-grid">
+
+    <!-- Info Panel -->
+    <div class="contact-info">
+      <h3>🛕 Get In Touch</h3>
+      <div class="contact-detail">
+        <span class="icon">📍</span>
+        <div><strong>Address</strong><span>Hanuman Sangam Temple,<br/>Your City, India</span></div>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">📱</span>
+        <div><strong>Admin Phone</strong><span>+91 89855 93816</span></div>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">📧</span>
+        <div><strong>Admin Email</strong><span>hanumansangamu@gmail.com</span></div>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">🕒</span>
+        <div><strong>Meeting</strong><span>Every 5th — 7:00 PM</span></div>
+      </div>
+      <div class="contact-detail">
+        <span class="icon">🙏</span>
+        <div><strong>Puja Timings</strong><span>Daily 6:00 AM – 8:00 AM<br/>Evening 6:00 PM – 8:00 PM</span></div>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="contact-form-card">
+      <h3>Send Message to Admin</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:1rem;">
+        Your message will be delivered directly to <strong>hanumansangamu@gmail.com</strong>
+      </p>
+
+      <div class="msg-success" id="msgSuccess">✅ Message sent to admin successfully! They'll reply on your email. 🙏</div>
+      <div class="msg-error"   id="msgError"></div>
+
+      <form class="contact-form" id="contactForm" novalidate>
+
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" id="cName" placeholder="Enter your full name" required/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Email (admin will reply here)</label>
+          <input type="email" id="cEmail" placeholder="Enter your email" required/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mobile Number (optional)</label>
+          <input type="tel" id="cPhone" placeholder="10-digit mobile" maxlength="10"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Message / Problem</label>
+          <textarea id="cMessage" rows="5"
+                    placeholder="Describe your issue or question in detail…" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+          📩 Send to Admin
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+<footer><p>© 2022 Hanuman Sangam | Contact Support 🙏</p></footer>
+<div id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/contact.js"></script>
+</body>
+</html>

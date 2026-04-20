@@ -1,0 +1,41 @@
+@import 'vars.css';
+
+main { max-width:1200px; margin:0 auto; padding:1.5rem 1rem 3rem; }
+
+/* Page header */
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+.page-title  { font-size:1.4rem; font-weight:800; }
+.page-subtitle { color:var(--text-muted); font-size:.88rem; margin-top:.2rem; }
+.live-badge  { display:flex; align-items:center; gap:.45rem; background:var(--green-light); color:var(--green); padding:.35rem .85rem; border-radius:20px; font-size:.82rem; font-weight:700; }
+.live-dot    { width:8px; height:8px; border-radius:50%; background:var(--green); animation:blink 1.2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* Stats row */
+.stats-row  { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+.stat-card  {
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:1.1rem 1.3rem; display:flex; align-items:center; gap:1rem;
+  box-shadow:var(--shadow);
+}
+.stat-icon  { font-size:2rem; }
+.stat-label { font-size:.78rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:.03em; }
+.stat-value { font-size:1.5rem; font-weight:800; color:var(--text); margin-top:.1rem; }
+.skeleton-val { color:var(--border); animation:pulse 1.2s infinite; font-size:1rem; }
+
+/* Payment form */
+.payment-form { display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end; }
+.btn-form-group .btn-group { display:flex; gap:.5rem; }
+
+/* Stats update */
+.stats-update-header { padding:.9rem 1.25rem; border-bottom:1px solid var(--border); background:var(--bg2); }
+.stats-update-title  { font-size:1rem; font-weight:700; display:flex; align-items:center; gap:.75rem; }
+.mode-badge  { font-size:.75rem; padding:.2rem .65rem; border-radius:20px; font-weight:600; }
+.mode-manual { background:var(--yellow-light); color:var(--yellow); }
+.mode-auto   { background:var(--blue-light); color:var(--blue); }
+.stats-update-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1rem; }
+.stats-update-actions { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+.divider-text { color:var(--text-muted); font-size:.85rem; font-weight:500; }
+.form-input { /* already styled via vars */ }
+
+/* Announcement form */
+.announcement-form { display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end; }

@@ -1,0 +1,41 @@
+@import 'vars.css';
+
+/* Hero */
+.hero { background:linear-gradient(150deg,#FF6B00,#E05500,#C04400); color:#fff; text-align:center; padding:4rem 1rem 3rem; }
+.hero-icon { font-size:4rem; margin-bottom:.75rem; }
+.hero h1   { font-size:2.5rem; font-weight:900; margin-bottom:.5rem; }
+.hero-tagline { opacity:.85; font-size:1.05rem; margin-bottom:2rem; }
+.collection-card { display:inline-block; background:rgba(255,255,255,.15); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.3); border-radius:16px; padding:1.5rem 3rem; }
+.collection-label  { font-size:.9rem; opacity:.85; margin-bottom:.4rem; }
+.collection-amount { font-size:2.8rem; font-weight:900; }
+
+/* Container */
+.home-container { max-width:1100px; margin:0 auto; padding:2rem 1rem 3rem; }
+
+/* Info cards */
+.info-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.25rem; margin-bottom:2.5rem; }
+.info-card  { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; box-shadow:var(--shadow); text-align:center; transition:transform .2s; }
+.info-card:hover { transform:translateY(-3px); }
+.info-card-icon { font-size:2.2rem; margin-bottom:.75rem; }
+.info-card h3   { font-size:1rem; font-weight:700; margin-bottom:.5rem; }
+.info-card p    { font-size:.88rem; color:var(--text-muted); line-height:1.6; }
+
+/* Events */
+.events-section { margin-bottom:2rem; }
+.events-section h2 { font-size:1.3rem; font-weight:800; margin-bottom:1rem; }
+.events-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; }
+.event-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.25rem; display:flex; align-items:center; gap:1rem; box-shadow:var(--shadow); }
+.event-date-badge { background:var(--saffron); color:#fff; border-radius:10px; padding:.5rem .75rem; text-align:center; min-width:52px; }
+.event-date-badge .day   { font-size:1.4rem; font-weight:900; line-height:1; }
+.event-date-badge .month { font-size:.7rem; font-weight:700; text-transform:uppercase; opacity:.9; }
+.event-info h4 { font-size:.95rem; font-weight:700; margin-bottom:.25rem; }
+.event-info p  { font-size:.82rem; color:var(--text-muted); }
+
+/* Meeting card */
+.meeting-card { background:linear-gradient(135deg,var(--saffron-light),#FFF0D0); border:1px solid #FFD8A8; border-radius:var(--radius); padding:1.25rem 1.5rem; display:flex; align-items:center; gap:1.25rem; }
+.meeting-icon { font-size:2.5rem; }
+.meeting-info h3 { font-size:1rem; font-weight:800; margin-bottom:.5rem; }
+.meeting-meta   { display:flex; flex-wrap:wrap; gap:.5rem; }
+.meta-pill { background:rgba(255,107,0,.12); color:var(--saffron-dark); padding:.25rem .7rem; border-radius:20px; font-size:.8rem; font-weight:600; }
+
+.btn-login-nav { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.4); color:#fff; padding:.4rem 1rem; border-radius:8px; font-weight:600; font-size:.88rem; text-decoration:none; }

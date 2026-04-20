@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — Hanuman Sangam</title>
+  <link rel="stylesheet" href="css/login.css"/>
+</head>
+<body>
+
+<div class="login-card">
+
+  <!-- ── LEFT PANEL ────────────────────────────────────────── -->
+  <div class="login-left">
+    <div class="temple-icon">🛕</div>
+    <h2>Hanuman Sangam</h2>
+    <p class="tagline">जय बजरंगबली 🙏</p>
+    <div class="features">
+      <div class="feature-item">💰 Track member payments live</div>
+      <div class="feature-item">📣 Receive announcements instantly</div>
+      <div class="feature-item">📊 Transparent financial records</div>
+      <div class="feature-item">🔒 Secure member portal</div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ───────────────────────────────────────── -->
+  <div class="login-right">
+    <h3>Welcome Back 🙏</h3>
+    <p class="sub">Sign in with your registered mobile number</p>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <form id="loginForm" autocomplete="off" novalidate>
+
+      <div class="input-group">
+        <label>Mobile Number</label>
+        <div class="input-icon-wrap">
+          <span class="icon">📱</span>
+          <input type="tel" id="mobile"
+                 placeholder="Enter 10-digit mobile"
+                 maxlength="10" inputmode="numeric"
+                 autocomplete="tel" required/>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <div class="input-icon-wrap">
+          <span class="icon">🔑</span>
+          <input type="password" id="password"
+                 placeholder="Enter your password"
+                 autocomplete="current-password" required/>
+          <span class="toggle-eye" id="toggleEye" onclick="togglePw()">🙈</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" id="loginBtn">
+        <span id="btnText">Login →</span>
+        <span class="spinner" id="spinner"></span>
+      </button>
+
+    </form>
+
+    <p class="login-footer">
+      New member? <a href="register.html">Register here</a>
+    </p>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/common.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>
