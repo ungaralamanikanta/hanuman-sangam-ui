@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hanuman Sangam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Cinzel:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --saffron:#E8590C;
+  --saffron2:#FF7A30;
+  --gold:#D4950A;
+  --gold2:#F5C842;
+  --deep:#1A0800;
+  --cream:#FDF3E3;
+}
+
+html,body{height:100%;overflow-x:hidden;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--deep);
+  color:var(--cream);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,89,12,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 100%, rgba(212,149,10,0.2) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(232,89,12,0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #0D0400 0%, #1A0800 40%, #2C1200 100%);
+  z-index:0;
+}
+
+/* ── STARS ── */
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.star{
+  position:absolute;
+  background:var(--gold2);
+  border-radius:50%;
+  animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
+}
+@keyframes twinkle{0%,100%{opacity:0.1;transform:scale(1);}50%{opacity:0.9;transform:scale(1.4);}}
+
+/* ── DIYA ROW ── */
+.diyas{position:fixed;bottom:0;left:0;right:0;height:120px;z-index:1;pointer-events:none;}
+.diya{
+  position:absolute;
+  bottom:10px;
+  width:12px;height:12px;
+  background:radial-gradient(circle, var(--gold2) 0%, var(--saffron) 50%, transparent 100%);
+  border-radius:50%;
+  animation:flicker var(--fd,1.2s) ease-in-out infinite var(--fdelay,0s);
+  filter:blur(1px);
+}
+.diya::before{
+  content:'';
+  position:absolute;
+  bottom:8px;left:50%;
+  transform:translateX(-50%);
+  width:4px;height:16px;
+  background:linear-gradient(to top, var(--saffron2), var(--gold2), rgba(255,255,200,0.9));
+  border-radius:50% 50% 0 0;
+  filter:blur(0.5px);
+  animation:flameFlicker var(--fd,1.2s) ease-in-out infinite var(--fdelay,0s);
+}
+@keyframes flicker{0%,100%{opacity:0.8;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
+@keyframes flameFlicker{0%,100%{transform:translateX(-50%) scaleX(1);}50%{transform:translateX(-50%) scaleX(0.7) scaleY(1.2);}}
+
+/* ── MANDALA RINGS ── */
+.mandala{
+  position:fixed;
+  border-radius:50%;
+  border:1px solid rgba(212,149,10,0.12);
+  pointer-events:none;z-index:0;
+  top:50%;left:50%;
+}
+@keyframes spinRing{to{transform:translate(-50%,-50%) rotate(360deg);}}
+
+/* ── CONTAINER ── */
+.container{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;text-align:center;
+  padding:2rem 1.5rem 7rem;
+  max-width:520px;width:100%;
+  animation:pageIn 0.8s ease both;
+}
+@keyframes pageIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── OM ── */
+.om{
+  font-size:2.8rem;line-height:1;
+  margin-bottom:0.4rem;
+  color:var(--gold2);
+  animation:omPulse 3s ease-in-out infinite;
+  filter:drop-shadow(0 0 18px rgba(245,200,66,0.8));
+}
+@keyframes omPulse{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 0 18px rgba(245,200,66,0.8));}
+  50%{transform:scale(1.09);filter:drop-shadow(0 0 34px rgba(245,200,66,1));}
+}
+
+/* ── TEMPLE SVG WRAP ── */
+.temple-wrap{
+  position:relative;
+  width:260px;height:220px;
+  margin:0.4rem auto 1rem;
+  animation:templeFloat 5s ease-in-out infinite;
+  filter:drop-shadow(0 0 28px rgba(232,89,12,0.55));
+}
+@keyframes templeFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.temple-wrap::before{
+  content:'';
+  position:absolute;top:50%;left:50%;
+  width:200px;height:200px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(232,89,12,0.22) 0%, transparent 70%);
+  animation:glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.7;}
+  50%{transform:translate(-50%,-50%) scale(1.25);opacity:1;}
+}
+
+/* ── TEXT ── */
+.title{
+  font-family:'Cinzel',serif;
+  font-size:clamp(2rem,7vw,3rem);
+  font-weight:700;letter-spacing:0.04em;
+  background:linear-gradient(135deg, var(--gold2) 0%, var(--saffron2) 50%, var(--gold2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200% 200%;
+  animation:shimmer 4s ease infinite;
+  margin-bottom:0.3rem;line-height:1.15;
+}
+@keyframes shimmer{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+
+.hindi{
+  font-family:'Tiro Devanagari Hindi',serif;
+  font-size:1.15rem;
+  color:rgba(253,243,227,0.75);
+  margin-bottom:0.5rem;
+}
+.tagline{
+  font-size:0.8rem;
+  color:rgba(253,243,227,0.4);
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:2rem;
+}
+
+/* ── BUTTON ── */
+.btn-wrap{
+  width:100%;position:relative;
+  animation:fadeUp 0.8s ease 0.5s both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ripple rings */
+.btn-wrap::before,.btn-wrap::after{
+  content:'';position:absolute;
+  top:50%;left:50%;
+  width:100%;height:100%;
+  border-radius:60px;
+  border:1.5px solid rgba(232,89,12,0.35);
+  animation:rippleOut 2.5s ease-out infinite;
+  pointer-events:none;
+}
+.btn-wrap::after{animation-delay:1.25s;}
+@keyframes rippleOut{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:0.6;}
+  100%{transform:translate(-50%,-50%) scale(1.4);opacity:0;}
+}
+
+.btn-register{
+  display:flex;
+  align-items:center;justify-content:center;
+  gap:0.6rem;
+  width:100%;
+  padding:1.15rem 2rem;
+  background:linear-gradient(135deg, var(--saffron) 0%, var(--gold) 100%);
+  color:#fff;border:none;border-radius:60px;
+  font-family:'Cinzel',serif;
+  font-size:1.1rem;font-weight:600;
+  letter-spacing:0.08em;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform 0.2s, box-shadow 0.3s;
+  box-shadow:0 6px 30px rgba(232,89,12,0.45);
+  text-decoration:none;
+}
+.btn-register::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.18) 0%,transparent 55%);
+  border-radius:inherit;
+}
+/* shimmer sweep */
+.btn-register::after{
+  content:'';position:absolute;
+  top:0;left:-100%;width:55%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.32),transparent);
+  transform:skewX(-20deg);
+  animation:sweep 3s ease-in-out infinite 1.8s;
+}
+@keyframes sweep{0%{left:-100%;}40%,100%{left:160%;}}
+
+.btn-register:hover{
+  transform:translateY(-3px) scale(1.02);
+  box-shadow:0 14px 42px rgba(232,89,12,0.65), 0 0 0 8px rgba(232,89,12,0.1);
+}
+.btn-register:active{transform:translateY(0) scale(0.98);}
+
+.btn-icon{
+  font-size:1.3rem;
+  animation:handWave 2.5s ease-in-out infinite 2s;
+  display:inline-block;
+}
+@keyframes handWave{
+  0%,100%{transform:rotate(0);}
+  20%{transform:rotate(-18deg);}
+  40%{transform:rotate(12deg);}
+  60%{transform:rotate(-10deg);}
+  80%{transform:rotate(6deg);}
+}
+
+/* ── LOGIN LINK ── */
+.login-link{
+  margin-top:1.4rem;font-size:0.875rem;
+  color:rgba(253,243,227,0.45);
+  animation:fadeUp 0.8s ease 0.7s both;
+}
+.login-link a{
+  color:var(--gold2);text-decoration:none;font-weight:500;
+  position:relative;transition:color 0.2s;
+}
+.login-link a::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;
+  height:1px;background:var(--gold2);
+  transform:scaleX(0);transition:transform 0.25s;transform-origin:left;
+}
+.login-link a:hover{color:#fff;}
+.login-link a:hover::after{transform:scaleX(1);}
+
+/* ── FLOATING PETALS ── */
+.petal{
+  position:fixed;
+  animation:petalFall var(--pd,8s) linear infinite var(--pdelay,0s);
+  opacity:0;z-index:1;pointer-events:none;user-select:none;
+}
+@keyframes petalFall{
+  0%{transform:translateY(-40px) rotate(0deg);opacity:0;}
+  10%{opacity:0.65;}
+  90%{opacity:0.25;}
+  100%{transform:translateY(110vh) rotate(400deg);opacity:0;}
+}
+
+/* ── REDIRECT OVERLAY ── */
+.overlay{
+  position:fixed;inset:0;
+  background:var(--saffron);
+  z-index:999;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1.2rem;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.5s ease;
+}
+.overlay.active{opacity:1;pointer-events:all;}
+.overlay .big-om{
+  font-size:4rem;
+  animation:omPulse 0.8s ease-in-out infinite;
+  filter:drop-shadow(0 0 20px rgba(255,255,255,0.6));
+}
+.overlay-text{
+  font-family:'Cinzel',serif;font-size:1.2rem;
+  color:white;letter-spacing:0.12em;
+  animation:fadeUpIn 0.5s ease both;
+}
+.overlay-dots span{
+  display:inline-block;width:8px;height:8px;
+  border-radius:50%;background:white;margin:0 4px;
+  animation:dot 1.2s ease-in-out infinite;
+}
+.overlay-dots span:nth-child(2){animation-delay:0.2s;}
+.overlay-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes dot{0%,100%{transform:translateY(0);opacity:0.4;}50%{transform:translateY(-8px);opacity:1;}}
+@keyframes fadeUpIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div id="petals"></div>
+<div class="diyas" id="diyas"></div>
+
+<!-- Mandala rings -->
+<div class="mandala" style="width:620px;height:620px;animation:spinRing 65s linear infinite;"></div>
+<div class="mandala" style="width:430px;height:430px;border-style:dashed;animation:spinRing 38s linear infinite reverse;border-color:rgba(232,89,12,0.1);"></div>
+<div class="mandala" style="width:260px;height:260px;animation:spinRing 22s linear infinite;border-color:rgba(245,200,66,0.1);"></div>
+
+<div class="container">
+
+  <div class="om">ॐ</div>
+
+  <!-- Temple SVG -->
+  <div class="temple-wrap">
+    <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tg1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F5C842"/>
+          <stop offset="100%" stop-color="#E8590C"/>
+        </linearGradient>
+        <linearGradient id="tg2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FF9A4A"/>
+          <stop offset="100%" stop-color="#B84000"/>
+        </linearGradient>
+        <linearGradient id="tg3" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#D4950A"/>
+          <stop offset="100%" stop-color="#F5C842"/>
+        </linearGradient>
+        <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <!-- Flag -->
+      <line x1="130" y1="8" x2="130" y2="32" stroke="#D4950A" stroke-width="1.5"/>
+      <polygon points="130,8 150,17 130,24" fill="#E8590C" opacity="0.95"/>
+      <!-- Main spire -->
+      <polygon points="130,32 106,76 154,76" fill="url(#tg1)" filter="url(#glow)"/>
+      <polygon points="130,32 122,56 138,56" fill="rgba(255,255,255,0.15)"/>
+      <ellipse cx="130" cy="69" rx="24" ry="5.5" fill="url(#tg1)"/>
+      <ellipse cx="130" cy="75" rx="26" ry="5.5" fill="url(#tg2)"/>
+      <!-- Side spires -->
+      <polygon points="93,58 78,86 108,86" fill="url(#tg2)" opacity="0.88"/>
+      <polygon points="167,58 152,86 182,86" fill="url(#tg2)" opacity="0.88"/>
+      <ellipse cx="93"  cy="81" rx="16" ry="4" fill="url(#tg2)" opacity="0.8"/>
+      <ellipse cx="167" cy="81" rx="16" ry="4" fill="url(#tg2)" opacity="0.8"/>
+      <!-- Corner mini spires -->
+      <polygon points="66,74 56,93 76,93"  fill="#D4950A" opacity="0.7"/>
+      <polygon points="194,74 184,93 204,93" fill="#D4950A" opacity="0.7"/>
+      <!-- Mandap roof -->
+      <polygon points="58,90 130,72 202,90" fill="url(#tg3)"/>
+      <rect x="58" y="90" width="144" height="18" rx="2" fill="url(#tg1)"/>
+      <!-- Wall -->
+      <rect x="58" y="108" width="144" height="68" fill="url(#tg2)"/>
+      <line x1="58" y1="121" x2="202" y2="121" stroke="rgba(255,220,100,0.28)" stroke-width="0.8"/>
+      <line x1="58" y1="134" x2="202" y2="134" stroke="rgba(255,220,100,0.28)" stroke-width="0.8"/>
+      <line x1="58" y1="147" x2="202" y2="147" stroke="rgba(255,220,100,0.28)" stroke-width="0.8"/>
+      <!-- Pillars -->
+      <rect x="70"  y="108" width="10" height="68" fill="rgba(255,220,100,0.22)" rx="2"/>
+      <rect x="95"  y="108" width="10" height="68" fill="rgba(255,220,100,0.22)" rx="2"/>
+      <rect x="145" y="108" width="10" height="68" fill="rgba(255,220,100,0.22)" rx="2"/>
+      <rect x="180" y="108" width="10" height="68" fill="rgba(255,220,100,0.22)" rx="2"/>
+      <!-- Door -->
+      <rect x="111" y="131" width="38" height="45" rx="5" fill="#1A0800" opacity="0.88"/>
+      <path d="M111,145 Q130,128 149,145" fill="none" stroke="#F5C842" stroke-width="1.5"/>
+      <rect x="111" y="131" width="38" height="45" rx="5" fill="rgba(245,200,66,0.06)"/>
+      <!-- Windows -->
+      <rect x="73"  y="119" width="20" height="16" rx="2" fill="rgba(245,200,66,0.1)" stroke="rgba(245,200,66,0.38)" stroke-width="0.8"/>
+      <rect x="167" y="119" width="20" height="16" rx="2" fill="rgba(245,200,66,0.1)" stroke="rgba(245,200,66,0.38)" stroke-width="0.8"/>
+      <line x1="83"  y1="119" x2="83"  y2="135" stroke="rgba(245,200,66,0.35)" stroke-width="0.5"/>
+      <line x1="73"  y1="127" x2="93"  y2="127" stroke="rgba(245,200,66,0.35)" stroke-width="0.5"/>
+      <line x1="177" y1="119" x2="177" y2="135" stroke="rgba(245,200,66,0.35)" stroke-width="0.5"/>
+      <line x1="167" y1="127" x2="187" y2="127" stroke="rgba(245,200,66,0.35)" stroke-width="0.5"/>
+      <!-- Steps -->
+      <rect x="90"  y="176" width="80" height="7" rx="1" fill="url(#tg1)" opacity="0.9"/>
+      <rect x="76"  y="183" width="108" height="7" rx="1" fill="url(#tg2)" opacity="0.9"/>
+      <rect x="62"  y="190" width="136" height="8" rx="1" fill="#D4950A" opacity="0.85"/>
+      <!-- Base diyas -->
+      <ellipse cx="104" cy="196" rx="4" ry="2" fill="rgba(245,200,66,0.55)"/>
+      <ellipse cx="156" cy="196" rx="4" ry="2" fill="rgba(245,200,66,0.55)"/>
+      <line x1="104" y1="196" x2="104" y2="187" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+      <line x1="156" y1="196" x2="156" y2="187" stroke="#F5C842" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+    </svg>
+  </div>
+
+  <h1 class="title">Hanuman Sangam</h1>
+  <p class="hindi">जय बजरंगबली 🙏</p>
+  <p class="tagline">Member Portal · Temple Community</p>
+
+  <div class="btn-wrap">
+    <a class="btn-register" href="register.html" onclick="goRegister(event)">
+      <span class="btn-icon">🙏</span>
+      Join Our Sangam
+    </a>
+  </div>
+
+  <p class="login-link">Already a member? <a href="login.html">Sign in here →</a></p>
+</div>
+
+<!-- Redirect overlay -->
+<div class="overlay" id="overlay">
+  <div class="big-om">ॐ</div>
+  <div class="overlay-text">Taking you to Registration…</div>
+  <div class="overlay-dots">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<script>
+// Stars
+const starsEl=document.getElementById('stars');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');s.className='star';
+  const sz=Math.random()*2+0.8;
+  s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*70}%;left:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*5}s;`;
+  starsEl.appendChild(s);
+}
+
+// Diyas
+const diyasEl=document.getElementById('diyas');
+for(let i=0;i<30;i++){
+  const d=document.createElement('div');d.className='diya';
+  d.style.cssText=`left:${(i/29)*96+2}%;--fd:${0.85+Math.random()*0.7}s;--fdelay:${Math.random()*1.5}s;`;
+  diyasEl.appendChild(d);
+}
+
+// Petals
+const petalsEl=document.getElementById('petals');
+['🌸','🌼','🌺','✿','❀'].forEach((e,ei)=>{
+  for(let i=0;i<3;i++){
+    const p=document.createElement('div');p.className='petal';p.textContent=e;
+    p.style.cssText=`left:${Math.random()*100}%;font-size:${0.7+Math.random()*0.7}rem;--pd:${7+Math.random()*8}s;--pdelay:${Math.random()*9}s;`;
+    petalsEl.appendChild(p);
+  }
+});
+
+// Register click
+function goRegister(e){
+  e.preventDefault();
+  const ov=document.getElementById('overlay');
+  ov.classList.add('active');
+  setTimeout(()=>{ window.location.href='register.html'; },1300);
+}
+</script>
+</body>
+</html>
