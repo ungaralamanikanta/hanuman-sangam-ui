@@ -70,7 +70,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   }
 });
 
-// ── FORGOT PASSWORD ───────────────────────────
+// ── FORGOT PASSWORD (by Email) ────────────────
 
 function showForgot() {
   document.getElementById('loginSection').style.display  = 'none';
@@ -105,25 +105,29 @@ function resetForgotSteps() {
   document.getElementById('forgotStep1').style.display = 'block';
   document.getElementById('forgotStep2').style.display = 'none';
   document.getElementById('forgotStep3').style.display = 'none';
-  ['forgotPhone','forgotOtp','newPassword','confirmPassword']
+  ['forgotEmail','forgotOtp','newPassword','confirmPassword']
     .forEach(id => { document.getElementById(id).value = ''; });
   clearForgotState();
 }
 
-// Step 1 — Send OTP
+// Step 1 — Send OTP to email
 async function sendForgotOtp() {
-  const phone = document.getElementById('forgotPhone').value.trim();
+  const email = document.getElementById('forgotEmail').value.trim();
   const btn   = document.getElementById('btnSendForgotOtp');
   const txt   = document.getElementById('forgotOtpBtnText');
   const spin  = document.getElementById('forgotOtpSpinner');
 
   clearForgotState();
-  if (!/^\d{10}$/.test(phone)) { showForgotError('⚠️ Enter a valid 10-digit mobile number.'); return; }
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showForgotError('⚠️ Enter a valid email address.');
+    return;
+  }
 
   btn.disabled = true; txt.textContent = 'Sending…'; spin.style.display = 'inline-block';
 
   try {
-    const res = await Auth.forgotSendOtp(phone);
+    const res = await Auth.forgotSendOtp(email);
     showForgotSuccess('✅ ' + res.message);
     document.getElementById('forgotStep1').style.display = 'none';
     document.getElementById('forgotStep2').style.display = 'block';
@@ -136,19 +140,23 @@ async function sendForgotOtp() {
 
 // Step 2 — Verify OTP
 async function verifyForgotOtp() {
-  const phone = document.getElementById('forgotPhone').value.trim();
+  const email = document.getElementById('forgotEmail').value.trim();
   const otp   = document.getElementById('forgotOtp').value.trim();
   const btn   = document.getElementById('btnVerifyForgotOtp');
   const txt   = document.getElementById('forgotVerifyBtnText');
   const spin  = document.getElementById('forgotVerifySpinner');
 
   clearForgotState();
-  if (!otp || otp.length !== 6) { showForgotError('⚠️ Enter the 6-digit OTP.'); return; }
+
+  if (!otp || otp.length !== 6) {
+    showForgotError('⚠️ Enter the 6-digit OTP sent to your email.');
+    return;
+  }
 
   btn.disabled = true; txt.textContent = 'Verifying…'; spin.style.display = 'inline-block';
 
   try {
-    const res = await Auth.forgotVerifyOtp(phone, otp);
+    const res = await Auth.forgotVerifyOtp(email, otp);
     showForgotSuccess('✅ ' + res.message);
     document.getElementById('forgotStep2').style.display = 'none';
     document.getElementById('forgotStep3').style.display = 'block';
@@ -161,7 +169,7 @@ async function verifyForgotOtp() {
 
 // Step 3 — Reset Password
 async function resetPassword() {
-  const phone   = document.getElementById('forgotPhone').value.trim();
+  const email   = document.getElementById('forgotEmail').value.trim();
   const newPass = document.getElementById('newPassword').value;
   const confPass= document.getElementById('confirmPassword').value;
   const btn     = document.getElementById('btnResetPassword');
@@ -169,13 +177,14 @@ async function resetPassword() {
   const spin    = document.getElementById('resetSpinner');
 
   clearForgotState();
+
   if (newPass.length < 6)   { showForgotError('⚠️ Password must be at least 6 characters.'); return; }
   if (newPass !== confPass) { showForgotError('⚠️ Passwords do not match.'); return; }
 
   btn.disabled = true; txt.textContent = 'Resetting…'; spin.style.display = 'inline-block';
 
   try {
-    const res = await Auth.forgotReset(phone, newPass);
+    const res = await Auth.forgotReset(email, newPass);
     showForgotSuccess('✅ ' + res.message + ' Redirecting to login…');
     setTimeout(() => showLogin(), 2500);
   } catch (err) {
