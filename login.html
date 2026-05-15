@@ -11,7 +11,6 @@
 
   <!-- ── LEFT PANEL ── -->
   <div class="login-left">
-    <!-- Hanuman image as low-opacity background -->
     <div class="hanuman-bg" style="background-image:url('hanuman.jpeg')"></div>
     <div class="left-content">
       <div class="temple-icon">🛕</div>
@@ -70,18 +69,17 @@
     <!-- FORGOT PASSWORD SECTION -->
     <div id="forgotSection" style="display:none;">
       <h3>Reset Password 🔑</h3>
-      <p class="sub">Enter your mobile number to receive OTP on your registered email</p>
+      <p class="sub">Enter your registered email to receive OTP</p>
       <div class="error-box" id="forgotError"></div>
       <div class="success-box" id="forgotSuccess"></div>
 
-      <!-- Step 1: Phone -->
+      <!-- Step 1: Email -->
       <div id="forgotStep1">
         <div class="input-group">
-          <label>Mobile Number</label>
+          <label>Email Address</label>
           <div class="input-icon-wrap">
-            <span class="icon">📱</span>
-            <input type="tel" id="forgotPhone" placeholder="Registered mobile number"
-                   maxlength="10" inputmode="numeric"/>
+            <span class="icon">📧</span>
+            <input type="email" id="forgotEmail" placeholder="Enter your registered email"/>
           </div>
         </div>
         <button class="btn-login" id="btnSendForgotOtp" onclick="sendForgotOtp()">
