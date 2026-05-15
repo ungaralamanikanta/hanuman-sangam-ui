@@ -1,6 +1,11 @@
 @import 'vars.css';
 
-body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#FFF3E8 0%,#FFE0C0 100%); padding:1rem; }
+body {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh;
+  background:linear-gradient(135deg,#FFF3E8 0%,#FFE0C0 100%);
+  padding:1rem;
+}
 
 .login-card {
   display:flex; width:100%; max-width:860px;
@@ -9,26 +14,57 @@ body { display:flex; align-items:center; justify-content:center; min-height:100v
   min-height:520px;
 }
 
-/* Left */
+/* ── LEFT ── */
 .login-left {
-  width:42%; background:linear-gradient(150deg,#FF6B00 0%,#E05500 60%,#C04400 100%);
-  padding:3rem 2.5rem; display:flex; flex-direction:column;
-  justify-content:center; color:#fff;
+  width:42%;
+  background:linear-gradient(150deg,#FF6B00 0%,#E05500 60%,#C04400 100%);
+  padding:3rem 2.5rem;
+  display:flex; flex-direction:column; justify-content:center;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
 }
+
+/* Hanuman image as low-opacity background */
+.hanuman-bg {
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:top center;
+  opacity:0.13;
+  mix-blend-mode:luminosity;
+  pointer-events:none;
+}
+
+/* Content sits above the image */
+.left-content {
+  position:relative;
+  z-index:1;
+}
+
 .temple-icon { font-size:3.5rem; margin-bottom:1rem; }
 .login-left h2 { font-size:1.6rem; font-weight:800; margin-bottom:.4rem; }
 .tagline { opacity:.85; margin-bottom:2rem; font-size:1.05rem; }
 .features { display:flex; flex-direction:column; gap:.7rem; }
 .feature-item { display:flex; align-items:center; gap:.6rem; font-size:.9rem; opacity:.9; }
 
-/* Right */
-.login-right { flex:1; padding:3rem 2.5rem; display:flex; flex-direction:column; justify-content:center; }
+/* ── RIGHT ── */
+.login-right {
+  flex:1; padding:3rem 2.5rem;
+  display:flex; flex-direction:column; justify-content:center;
+}
 .login-right h3 { font-size:1.5rem; font-weight:800; margin-bottom:.25rem; }
 .sub { color:var(--text-muted); margin-bottom:1.5rem; font-size:.9rem; }
 
 .error-box {
   display:none; background:var(--red-light); border:1px solid #FECACA;
   color:var(--red); padding:.7rem 1rem; border-radius:8px;
+  margin-bottom:1rem; font-size:.88rem; font-weight:500;
+}
+
+.success-box {
+  display:none; background:#f0fdf4; border:1px solid #bbf7d0;
+  color:#166534; padding:.7rem 1rem; border-radius:8px;
   margin-bottom:1rem; font-size:.88rem; font-weight:500;
 }
 
@@ -47,7 +83,7 @@ body { display:flex; align-items:center; justify-content:center; min-height:100v
   display:flex; align-items:center; justify-content:center; gap:.5rem;
   transition:opacity .2s, transform .15s;
 }
-.btn-login:hover { opacity:.92; transform:translateY(-1px); }
+.btn-login:hover    { opacity:.92; transform:translateY(-1px); }
 .btn-login:disabled { opacity:.65; transform:none; }
 
 .login-footer { text-align:center; margin-top:1.25rem; font-size:.88rem; color:var(--text-muted); }
@@ -55,7 +91,7 @@ body { display:flex; align-items:center; justify-content:center; min-height:100v
 .login-footer a:hover { text-decoration:underline; }
 
 @media(max-width:640px) {
-  .login-card { flex-direction:column; }
-  .login-left { width:100%; padding:2rem 1.5rem; }
-  .login-right { padding:2rem 1.5rem; }
+  .login-card   { flex-direction:column; }
+  .login-left   { width:100%; padding:2rem 1.5rem; }
+  .login-right  { padding:2rem 1.5rem; }
 }
