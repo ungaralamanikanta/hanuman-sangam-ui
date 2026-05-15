@@ -5,12 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard — Hanuman Sangam</title>
   <link rel="stylesheet" href="admin-dashboard.css">
+  <style>
+    /* ── Edit Member Modal ── */
+    .edit-modal-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(0,0,0,0.45); z-index:1000;
+      align-items:center; justify-content:center;
+    }
+    .edit-modal-overlay.active { display:flex; }
+    .edit-modal {
+      background:#fff; border-radius:16px; padding:2rem;
+      width:100%; max-width:460px;
+      box-shadow:0 20px 60px rgba(0,0,0,.2);
+      animation:slideUp .2s ease;
+    }
+    @keyframes slideUp {
+      from{transform:translateY(20px);opacity:0}
+      to{transform:translateY(0);opacity:1}
+    }
+    .edit-modal h3 {
+      font-size:1.15rem; font-weight:800;
+      margin:0 0 1.4rem; color:#1a1a1a;
+    }
+    .edit-field { margin-bottom:.9rem; }
+    .edit-field label {
+      display:block; font-size:.75rem; font-weight:700;
+      color:#888; text-transform:uppercase;
+      letter-spacing:.04em; margin-bottom:.35rem;
+    }
+    .edit-field input,
+    .edit-field select {
+      width:100%; padding:.6rem .9rem;
+      border:1.5px solid #e5e7eb; border-radius:8px;
+      font-size:.95rem; outline:none;
+      transition:border-color .2s; box-sizing:border-box;
+    }
+    .edit-field input:focus,
+    .edit-field select:focus { border-color:#FF6B00; }
+    .edit-modal-actions {
+      display:flex; gap:.75rem;
+      margin-top:1.4rem; justify-content:flex-end;
+    }
+    .btn-save-edit {
+      background:linear-gradient(135deg,#FF6B00,#E05500);
+      color:#fff; border:none; padding:.65rem 1.5rem;
+      border-radius:8px; font-weight:700; cursor:pointer;
+      transition:opacity .2s;
+    }
+    .btn-save-edit:hover:not(:disabled) { opacity:.88; }
+    .btn-save-edit:disabled { opacity:.6; }
+    .btn-cancel-edit {
+      background:#f3f4f6; color:#374151; border:none;
+      padding:.65rem 1.25rem; border-radius:8px;
+      font-weight:600; cursor:pointer;
+    }
+    .btn-edit-member {
+      background:#fff7ed; color:#c2410c;
+      border:1px solid #fed7aa;
+      padding:.3rem .7rem; border-radius:6px;
+      font-size:.78rem; font-weight:700;
+      cursor:pointer; transition:background .2s;
+    }
+    .btn-edit-member:hover { background:#ffedd5; }
+  </style>
 </head>
 <body>
 
 <!-- OFFLINE BANNER -->
 <div id="offlineBanner" class="offline-banner" style="display:none;">
-  ⚠️ Cannot reach server. Showing cached data. Check backend at <strong>localhost:8080</strong>.
+  ⚠️ Cannot reach server. Showing cached data.
 </div>
 
 <!-- NAVBAR -->
@@ -36,9 +99,7 @@
       <div class="page-title">💼 Admin Dashboard</div>
       <div class="page-subtitle">Manage member payments &amp; approvals</div>
     </div>
-    <div class="live-badge">
-      <div class="live-dot"></div> Live
-    </div>
+    <div class="live-badge"><div class="live-dot"></div> Live</div>
   </div>
 
   <!-- ② Stat Cards -->
@@ -47,27 +108,21 @@
       <div class="stat-icon">💰</div>
       <div>
         <div class="stat-label">Total Collection</div>
-        <div class="stat-value" id="statTotalCollection">
-          <span class="skeleton-val">Loading…</span>
-        </div>
+        <div class="stat-value" id="statTotalCollection"><span class="skeleton-val">Loading…</span></div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">⏳</div>
       <div>
         <div class="stat-label">Total Pending</div>
-        <div class="stat-value" id="statTotalPending">
-          <span class="skeleton-val">Loading…</span>
-        </div>
+        <div class="stat-value" id="statTotalPending"><span class="skeleton-val">Loading…</span></div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">👥</div>
       <div>
         <div class="stat-label">Pending Approvals</div>
-        <div class="stat-value" id="statPendingMembers">
-          <span class="skeleton-val">…</span>
-        </div>
+        <div class="stat-value" id="statPendingMembers"><span class="skeleton-val">…</span></div>
       </div>
     </div>
   </div>
@@ -79,20 +134,14 @@
     </div>
     <div class="section-card-body">
       <div class="payment-form">
-
         <div class="form-group" style="flex:2;min-width:180px;">
           <label class="form-label">Member</label>
-          <select id="selectMember">
-            <option value="">— Select Member —</option>
-          </select>
+          <select id="selectMember"><option value="">— Select Member —</option></select>
         </div>
-
         <div class="form-group" style="flex:1.5;min-width:140px;">
           <label class="form-label">Amount (₹)</label>
-          <input type="number" id="paymentAmount"
-                 placeholder="Enter amount" min="1" step="1"/>
+          <input type="number" id="paymentAmount" placeholder="Enter amount" min="1" step="1"/>
         </div>
-
         <div class="form-group" style="flex:1.2;min-width:130px;">
           <label class="form-label">Payment Type</label>
           <select id="paymentType">
@@ -104,7 +153,6 @@
             <option value="OTHER">Other</option>
           </select>
         </div>
-
         <div class="form-group" style="flex:1.2;min-width:120px;">
           <label class="form-label">Status</label>
           <select id="paymentStatus">
@@ -112,21 +160,13 @@
             <option value="UNPAID">⏳ Unpaid</option>
           </select>
         </div>
-
         <div class="form-group btn-form-group" style="min-width:160px;">
           <label class="form-label">&nbsp;</label>
           <div class="btn-group">
-            <button class="btn btn-add" id="btnAdd"
-                    onclick="recordPayment('ADD')">
-              ＋ Add
-            </button>
-            <button class="btn btn-subtract" id="btnSubtract"
-                    onclick="recordPayment('SUBTRACT')">
-              − Subtract
-            </button>
+            <button class="btn btn-add" id="btnAdd" onclick="recordPayment('ADD')">＋ Add</button>
+            <button class="btn btn-subtract" id="btnSubtract" onclick="recordPayment('SUBTRACT')">− Subtract</button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -143,35 +183,25 @@
       <div class="stats-update-grid">
         <div class="form-group">
           <label class="form-label">Total Collection (₹)</label>
-          <input class="form-input" type="number"
-                 id="inputTotalCollection" placeholder="e.g. 15000" min="0"/>
+          <input class="form-input" type="number" id="inputTotalCollection" placeholder="e.g. 15000" min="0"/>
         </div>
         <div class="form-group">
           <label class="form-label">Total Paid (₹)</label>
-          <input class="form-input" type="number"
-                 id="inputTotalPaid" placeholder="e.g. 12000" min="0"/>
+          <input class="form-input" type="number" id="inputTotalPaid" placeholder="e.g. 12000" min="0"/>
         </div>
         <div class="form-group">
           <label class="form-label">Total Unpaid (₹)</label>
-          <input class="form-input" type="number"
-                 id="inputTotalUnpaid" placeholder="e.g. 3000" min="0"/>
+          <input class="form-input" type="number" id="inputTotalUnpaid" placeholder="e.g. 3000" min="0"/>
         </div>
         <div class="form-group">
           <label class="form-label">Pending Members (count)</label>
-          <input class="form-input" type="number"
-                 id="inputPendingMembers" placeholder="e.g. 5" min="0"/>
+          <input class="form-input" type="number" id="inputPendingMembers" placeholder="e.g. 5" min="0"/>
         </div>
       </div>
       <div class="stats-update-actions">
-        <button class="btn btn-primary" id="btnSaveManual"
-                onclick="saveStatsManual()">
-          💾 Save Manual Values
-        </button>
+        <button class="btn btn-primary" id="btnSaveManual" onclick="saveStatsManual()">💾 Save Manual Values</button>
         <span class="divider-text">— OR —</span>
-        <button class="btn btn-auto" id="btnAutoCalc"
-                onclick="saveStatsAuto()">
-          ⚡ Auto-Calculate from Payments
-        </button>
+        <button class="btn btn-auto" id="btnAutoCalc" onclick="saveStatsAuto()">⚡ Auto-Calculate from Payments</button>
       </div>
     </div>
   </div>
@@ -185,33 +215,27 @@
       <div class="announcement-form">
         <div class="form-group" style="flex:1;min-width:200px;">
           <label class="form-label">Title</label>
-          <input type="text" id="announcementTitle"
-                 placeholder="Announcement title…"/>
+          <input type="text" id="announcementTitle" placeholder="Announcement title…"/>
         </div>
         <div class="form-group" style="flex:2.5;min-width:260px;">
           <label class="form-label">Message</label>
-          <input type="text" id="announcementMessage"
-                 placeholder="Message to all members…"/>
+          <input type="text" id="announcementMessage" placeholder="Message to all members…"/>
         </div>
         <div class="form-group btn-form-group">
           <label class="form-label">&nbsp;</label>
-          <button class="btn btn-primary" id="btnAnnounce"
-                  onclick="sendAnnouncement()">
-            📣 Send to All
-          </button>
+          <button class="btn btn-primary" id="btnAnnounce" onclick="sendAnnouncement()">📣 Send to All</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ⑥ Approved Members Table -->
+  <!-- ⑥ Approved Members Table — with Edit button -->
   <div class="section-card">
     <div class="section-header">
       <div class="section-title">✅ Approved Members</div>
       <div class="header-right">
         <span class="member-count" id="approvedCount">0 members</span>
-        <button class="btn btn-secondary btn-sm"
-                onclick="loadAdminDashboard()">↻ Refresh</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadAdminDashboard()">↻ Refresh</button>
       </div>
     </div>
     <div class="table-wrap">
@@ -219,11 +243,11 @@
         <thead>
           <tr>
             <th>#</th><th>Name</th><th>Paid (₹)</th>
-            <th>Pending (₹)</th><th>Contact</th><th>Status</th>
+            <th>Pending (₹)</th><th>Contact</th><th>Status</th><th>Edit</th>
           </tr>
         </thead>
         <tbody id="approvedMembersBody">
-          <tr><td colspan="6" class="empty-state skeleton-row">Loading members…</td></tr>
+          <tr><td colspan="7" class="empty-state skeleton-row">Loading members…</td></tr>
         </tbody>
       </table>
     </div>
@@ -235,8 +259,7 @@
       <div class="section-title">🟡 Pending Approvals</div>
       <div class="header-right">
         <span class="member-count" id="pendingCount">0 pending</span>
-        <button class="btn btn-secondary btn-sm"
-                onclick="loadAdminDashboard()">↻ Refresh</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadAdminDashboard()">↻ Refresh</button>
       </div>
     </div>
     <div class="table-wrap">
@@ -265,6 +288,42 @@
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" onclick="confirmAction()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MEMBER MODAL -->
+<div id="editMemberModal" class="edit-modal-overlay">
+  <div class="edit-modal">
+    <h3>✏️ Edit Member Details</h3>
+    <input type="hidden" id="editMemberId"/>
+    <div class="edit-field">
+      <label>Full Name</label>
+      <input type="text" id="editName" placeholder="Member full name"/>
+    </div>
+    <div class="edit-field">
+      <label>Phone Number</label>
+      <input type="tel" id="editPhone" placeholder="10-digit phone" maxlength="10"/>
+    </div>
+    <div class="edit-field">
+      <label>Email</label>
+      <input type="email" id="editEmail" placeholder="Email address"/>
+    </div>
+    <div class="edit-field">
+      <label>Address</label>
+      <input type="text" id="editAddress" placeholder="Address (optional)"/>
+    </div>
+    <div class="edit-field">
+      <label>Status</label>
+      <select id="editStatus">
+        <option value="APPROVED">✅ Approved</option>
+        <option value="PENDING">🟡 Pending</option>
+        <option value="REJECTED">❌ Rejected</option>
+      </select>
+    </div>
+    <div class="edit-modal-actions">
+      <button class="btn-cancel-edit" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-save-edit" id="btnSaveEdit" onclick="saveEditMember()">💾 Save Changes</button>
     </div>
   </div>
 </div>
