@@ -1,9 +1,5 @@
 // api.js — Central API layer
 
-// FIX: Changed from relative '/api' to absolute URL with port 8081.
-// Relative URL only works when HTML is served BY the backend.
-// Since HTML files are opened directly from file://, we must use
-// the full absolute URL so API calls reach the Spring Boot server.
 const API_BASE = "https://hanuman-sangam-backend.onrender.com/api";
 
 // ── Session helpers ───────────────────────────
@@ -74,6 +70,11 @@ const Auth = {
   register:    (payload)     => apiFetch('/auth/register',     { method: 'POST', body: JSON.stringify(payload) }),
   memberLogin: (phone, pass) => apiFetch('/auth/member-login', { method: 'POST', body: JSON.stringify({ phoneNumber: phone, password: pass }) }),
   adminLogin:  (phone, pass) => apiFetch('/auth/admin-login',  { method: 'POST', body: JSON.stringify({ phoneNumber: phone, password: pass }) }),
+
+  // ── Forgot Password (by Email) ──────────────
+  forgotSendOtp:   (email)                => apiFetch('/auth/forgot-password/send-otp',   { method: 'POST', body: JSON.stringify({ email }) }),
+  forgotVerifyOtp: (email, otp)           => apiFetch('/auth/forgot-password/verify-otp', { method: 'POST', body: JSON.stringify({ email, otp }) }),
+  forgotReset:     (email, newPassword)   => apiFetch('/auth/forgot-password/reset',      { method: 'POST', body: JSON.stringify({ email, newPassword }) }),
 };
 
 // ── ADMIN ─────────────────────────────────────
