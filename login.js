@@ -1,11 +1,9 @@
 // login.js
 
-// ── Redirect already-logged-in users away from login page ──
-// BUG FIX: Was reading 'token' and 'role' but api.js saves them as
-// 'hs_token' and 'hs_role' — key mismatch caused infinite redirect loop.
+// ── Redirect already-logged-in users ──────────
 (function () {
-  const token = localStorage.getItem('hs_token'); // ✅ FIXED (was 'token')
-  const role  = localStorage.getItem('hs_role');  // ✅ FIXED (was 'role')
+  const token = localStorage.getItem('hs_token');
+  const role  = localStorage.getItem('hs_role');
   if (token && role) {
     window.location.replace(
       role === 'ADMIN' ? 'admin-dashboard.html' : 'member-dashboard.html'
@@ -26,6 +24,7 @@ function showError(msg) {
   box.style.display = msg ? 'block' : 'none';
 }
 
+// ── LOGIN ─────────────────────────────────────
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -37,7 +36,6 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
   showError('');
 
-  // Validate inputs
   if (!/^\d{10}$/.test(phone)) {
     showError('⚠️ Enter a valid 10-digit mobile number.');
     return;
@@ -47,38 +45,142 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     return;
   }
 
-  btn.disabled       = true;
-  txt.textContent    = 'Signing in…';
-  spin.style.display = 'inline-block';
+  btn.disabled = true; txt.textContent = 'Signing in…'; spin.style.display = 'inline-block';
 
   try {
     let data;
     const ADMIN_PHONE = '8985593816';
-
     if (phone === ADMIN_PHONE) {
       data = await Auth.adminLogin(phone, pass);
     } else {
       data = await Auth.memberLogin(phone, pass);
     }
 
-    if (!data || !data.token) {
-      throw new Error('Login failed. Please try again.');
-    }
+    if (!data || !data.token) throw new Error('Login failed. Please try again.');
 
-    // Save session using api.js saveSession() which uses hs_* keys
     saveSession(data.token, data.role, data.memberId, data.name);
-
     txt.textContent = '✅ Login successful!';
 
     const dest = data.role === 'ADMIN' ? 'admin-dashboard.html' : 'member-dashboard.html';
-    setTimeout(function () {
-      window.location.replace(dest);
-    }, 600);
+    setTimeout(function () { window.location.replace(dest); }, 600);
 
   } catch (err) {
     showError('❌ ' + err.message);
-    btn.disabled       = false;
-    txt.textContent    = 'Login →';
-    spin.style.display = 'none';
+    btn.disabled = false; txt.textContent = 'Login →'; spin.style.display = 'none';
   }
 });
+
+// ── FORGOT PASSWORD ───────────────────────────
+
+function showForgot() {
+  document.getElementById('loginSection').style.display  = 'none';
+  document.getElementById('forgotSection').style.display = 'block';
+  clearForgotState();
+}
+
+function showLogin() {
+  document.getElementById('forgotSection').style.display = 'none';
+  document.getElementById('loginSection').style.display  = 'block';
+  resetForgotSteps();
+}
+
+function clearForgotState() {
+  document.getElementById('forgotError').style.display   = 'none';
+  document.getElementById('forgotSuccess').style.display = 'none';
+}
+
+function showForgotError(msg) {
+  const el = document.getElementById('forgotError');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('forgotSuccess').style.display = 'none';
+}
+
+function showForgotSuccess(msg) {
+  const el = document.getElementById('forgotSuccess');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('forgotError').style.display = 'none';
+}
+
+function resetForgotSteps() {
+  document.getElementById('forgotStep1').style.display = 'block';
+  document.getElementById('forgotStep2').style.display = 'none';
+  document.getElementById('forgotStep3').style.display = 'none';
+  ['forgotPhone','forgotOtp','newPassword','confirmPassword']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  clearForgotState();
+}
+
+// Step 1 — Send OTP
+async function sendForgotOtp() {
+  const phone = document.getElementById('forgotPhone').value.trim();
+  const btn   = document.getElementById('btnSendForgotOtp');
+  const txt   = document.getElementById('forgotOtpBtnText');
+  const spin  = document.getElementById('forgotOtpSpinner');
+
+  clearForgotState();
+  if (!/^\d{10}$/.test(phone)) { showForgotError('⚠️ Enter a valid 10-digit mobile number.'); return; }
+
+  btn.disabled = true; txt.textContent = 'Sending…'; spin.style.display = 'inline-block';
+
+  try {
+    const res = await Auth.forgotSendOtp(phone);
+    showForgotSuccess('✅ ' + res.message);
+    document.getElementById('forgotStep1').style.display = 'none';
+    document.getElementById('forgotStep2').style.display = 'block';
+  } catch (err) {
+    showForgotError('❌ ' + err.message);
+  } finally {
+    btn.disabled = false; txt.textContent = 'Send OTP →'; spin.style.display = 'none';
+  }
+}
+
+// Step 2 — Verify OTP
+async function verifyForgotOtp() {
+  const phone = document.getElementById('forgotPhone').value.trim();
+  const otp   = document.getElementById('forgotOtp').value.trim();
+  const btn   = document.getElementById('btnVerifyForgotOtp');
+  const txt   = document.getElementById('forgotVerifyBtnText');
+  const spin  = document.getElementById('forgotVerifySpinner');
+
+  clearForgotState();
+  if (!otp || otp.length !== 6) { showForgotError('⚠️ Enter the 6-digit OTP.'); return; }
+
+  btn.disabled = true; txt.textContent = 'Verifying…'; spin.style.display = 'inline-block';
+
+  try {
+    const res = await Auth.forgotVerifyOtp(phone, otp);
+    showForgotSuccess('✅ ' + res.message);
+    document.getElementById('forgotStep2').style.display = 'none';
+    document.getElementById('forgotStep3').style.display = 'block';
+  } catch (err) {
+    showForgotError('❌ ' + err.message);
+  } finally {
+    btn.disabled = false; txt.textContent = 'Verify OTP →'; spin.style.display = 'none';
+  }
+}
+
+// Step 3 — Reset Password
+async function resetPassword() {
+  const phone   = document.getElementById('forgotPhone').value.trim();
+  const newPass = document.getElementById('newPassword').value;
+  const confPass= document.getElementById('confirmPassword').value;
+  const btn     = document.getElementById('btnResetPassword');
+  const txt     = document.getElementById('resetBtnText');
+  const spin    = document.getElementById('resetSpinner');
+
+  clearForgotState();
+  if (newPass.length < 6)   { showForgotError('⚠️ Password must be at least 6 characters.'); return; }
+  if (newPass !== confPass) { showForgotError('⚠️ Passwords do not match.'); return; }
+
+  btn.disabled = true; txt.textContent = 'Resetting…'; spin.style.display = 'inline-block';
+
+  try {
+    const res = await Auth.forgotReset(phone, newPass);
+    showForgotSuccess('✅ ' + res.message + ' Redirecting to login…');
+    setTimeout(() => showLogin(), 2500);
+  } catch (err) {
+    showForgotError('❌ ' + err.message);
+  } finally {
+    btn.disabled = false; txt.textContent = 'Reset Password →'; spin.style.display = 'none';
+  }
+}
