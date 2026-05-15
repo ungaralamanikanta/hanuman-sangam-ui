@@ -7,69 +7,139 @@
   <link rel="stylesheet" href="login.css">
 </head>
 <body>
-
 <div class="login-card">
 
-  <!-- ── LEFT PANEL ────────────────────────────────────────── -->
+  <!-- ── LEFT PANEL ── -->
   <div class="login-left">
-    <div class="temple-icon">🛕</div>
-    <h2>Hanuman Sangam</h2>
-    <p class="tagline">जय बजरंगबली 🙏</p>
-    <div class="features">
-      <div class="feature-item">💰 Track member payments live</div>
-      <div class="feature-item">📣 Receive announcements instantly</div>
-      <div class="feature-item">📊 Transparent financial records</div>
-      <div class="feature-item">🔒 Secure member portal</div>
+    <!-- Hanuman image as low-opacity background -->
+    <div class="hanuman-bg" style="background-image:url('hanuman.jpeg')"></div>
+    <div class="left-content">
+      <div class="temple-icon">🛕</div>
+      <h2>Hanuman Sangam</h2>
+      <p class="tagline">जय बजरंगबली 🙏</p>
+      <div class="features">
+        <div class="feature-item">💰 Track member payments live</div>
+        <div class="feature-item">📣 Receive announcements instantly</div>
+        <div class="feature-item">📊 Transparent financial records</div>
+        <div class="feature-item">🔒 Secure member portal</div>
+      </div>
     </div>
   </div>
 
-  <!-- ── RIGHT PANEL ───────────────────────────────────────── -->
+  <!-- ── RIGHT PANEL ── -->
   <div class="login-right">
-    <h3>Welcome Back 🙏</h3>
-    <p class="sub">Sign in with your registered mobile number</p>
 
-    <div class="error-box" id="errorBox"></div>
-
-    <form id="loginForm" autocomplete="off" novalidate>
-
-      <div class="input-group">
-        <label>Mobile Number</label>
-        <div class="input-icon-wrap">
-          <span class="icon">📱</span>
-          <input type="tel" id="mobile"
-                 placeholder="Enter 10-digit mobile"
-                 maxlength="10" inputmode="numeric"
-                 autocomplete="tel" required/>
+    <!-- LOGIN SECTION -->
+    <div id="loginSection">
+      <h3>Welcome Back 🙏</h3>
+      <p class="sub">Sign in with your registered mobile number</p>
+      <div class="error-box" id="errorBox"></div>
+      <form id="loginForm" autocomplete="off" novalidate>
+        <div class="input-group">
+          <label>Mobile Number</label>
+          <div class="input-icon-wrap">
+            <span class="icon">📱</span>
+            <input type="tel" id="mobile" placeholder="Enter 10-digit mobile"
+                   maxlength="10" inputmode="numeric" autocomplete="tel" required/>
+          </div>
         </div>
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🔑</span>
+            <input type="password" id="password" placeholder="Enter your password"
+                   autocomplete="current-password" required/>
+            <span class="toggle-eye" id="toggleEye" onclick="togglePw()">🙈</span>
+          </div>
+        </div>
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span id="btnText">Login →</span>
+          <span class="spinner" id="spinner"></span>
+        </button>
+      </form>
+      <p class="login-footer">
+        <a href="#" onclick="showForgot();return false;">Forgot Password?</a>
+        &nbsp;|&nbsp;
+        New member? <a href="register.html">Register here</a>
+      </p>
+      <p class="login-footer" style="margin-top:.4rem;">
+        Facing issues? <a href="mailto:hanumansangamu@gmail.com">hanumansangamu@gmail.com</a>
+      </p>
+    </div>
+
+    <!-- FORGOT PASSWORD SECTION -->
+    <div id="forgotSection" style="display:none;">
+      <h3>Reset Password 🔑</h3>
+      <p class="sub">Enter your mobile number to receive OTP on your registered email</p>
+      <div class="error-box" id="forgotError"></div>
+      <div class="success-box" id="forgotSuccess"></div>
+
+      <!-- Step 1: Phone -->
+      <div id="forgotStep1">
+        <div class="input-group">
+          <label>Mobile Number</label>
+          <div class="input-icon-wrap">
+            <span class="icon">📱</span>
+            <input type="tel" id="forgotPhone" placeholder="Registered mobile number"
+                   maxlength="10" inputmode="numeric"/>
+          </div>
+        </div>
+        <button class="btn-login" id="btnSendForgotOtp" onclick="sendForgotOtp()">
+          <span id="forgotOtpBtnText">Send OTP →</span>
+          <span class="spinner" id="forgotOtpSpinner"></span>
+        </button>
       </div>
 
-      <div class="input-group">
-        <label>Password</label>
-        <div class="input-icon-wrap">
-          <span class="icon">🔑</span>
-          <input type="password" id="password"
-                 placeholder="Enter your password"
-                 autocomplete="current-password" required/>
-          <span class="toggle-eye" id="toggleEye" onclick="togglePw()">🙈</span>
+      <!-- Step 2: OTP -->
+      <div id="forgotStep2" style="display:none;">
+        <div class="input-group">
+          <label>Enter OTP</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🔢</span>
+            <input type="text" id="forgotOtp" placeholder="6-digit OTP"
+                   maxlength="6" inputmode="numeric"/>
+          </div>
         </div>
+        <button class="btn-login" id="btnVerifyForgotOtp" onclick="verifyForgotOtp()">
+          <span id="forgotVerifyBtnText">Verify OTP →</span>
+          <span class="spinner" id="forgotVerifySpinner"></span>
+        </button>
       </div>
 
-      <button type="submit" class="btn-login" id="loginBtn">
-        <span id="btnText">Login →</span>
-        <span class="spinner" id="spinner"></span>
-      </button>
+      <!-- Step 3: New Password -->
+      <div id="forgotStep3" style="display:none;">
+        <div class="input-group">
+          <label>New Password</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🔑</span>
+            <input type="password" id="newPassword" placeholder="Min 6 characters"/>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Confirm Password</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🔑</span>
+            <input type="password" id="confirmPassword" placeholder="Re-enter password"/>
+          </div>
+        </div>
+        <button class="btn-login" id="btnResetPassword" onclick="resetPassword()">
+          <span id="resetBtnText">Reset Password →</span>
+          <span class="spinner" id="resetSpinner"></span>
+        </button>
+      </div>
 
-    </form>
+      <p class="login-footer" style="margin-top:1rem;">
+        <a href="#" onclick="showLogin();return false;">← Back to Login</a>
+      </p>
+      <p class="login-footer" style="margin-top:.4rem;">
+        Facing issues? <a href="mailto:hanumansangamu@gmail.com">hanumansangamu@gmail.com</a>
+      </p>
+    </div>
 
-    <p class="login-footer">
-      New member? <a href="register.html">Register here</a>
-    </p>
   </div>
-
 </div>
 
 <div id="toast"></div>
-
 <script src="api.js"></script>
 <script src="common.js"></script>
 <script src="login.js"></script>
