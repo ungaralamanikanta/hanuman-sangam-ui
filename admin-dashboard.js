@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!requireAuth('ADMIN')) return;
   loadAllData();
 
-  // Event delegation on pending table — works even after table re-renders
+  // Event delegation — pending table
   document.getElementById('pendingMembersBody')
     .addEventListener('click', function(e) {
       const btn = e.target.closest('button[data-action]');
@@ -14,6 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const action = btn.getAttribute('data-action');
       if (action === 'approve') handleApprove(id, name);
       if (action === 'reject')  handleReject(id, name);
+    });
+
+  // Event delegation — approved table (edit button)
+  document.getElementById('approvedMembersBody')
+    .addEventListener('click', function(e) {
+      const btn = e.target.closest('button[data-action="edit"]');
+      if (!btn) return;
+      openEditModal({
+        id:          parseInt(btn.getAttribute('data-id')),
+        name:        btn.getAttribute('data-name'),
+        phoneNumber: btn.getAttribute('data-phone'),
+        email:       btn.getAttribute('data-email'),
+        address:     btn.getAttribute('data-address'),
+        status:      btn.getAttribute('data-status'),
+      });
+    });
+
+  // Close edit modal on outside click
+  document.getElementById('editMemberModal')
+    .addEventListener('click', function(e) {
+      if (e.target === this) closeEditModal();
     });
 });
 
@@ -28,7 +49,7 @@ async function loadAllData() {
 }
 function loadAdminDashboard() { loadAllData(); }
 
-// ── Stat Cards — reads from /admin/stats ─────
+// ── Stat Cards ────────────────────────────────
 async function loadStats() {
   try {
     const s = await Admin.getStats();
@@ -36,13 +57,10 @@ async function loadStats() {
     document.getElementById('statTotalCollection').textContent = rupees(s.totalCollection);
     document.getElementById('statTotalPending').textContent    = rupees(s.totalUnpaid);
     document.getElementById('statPendingMembers').textContent  = s.totalPendingMembers || 0;
-
-    // Pre-fill manual update form
-    document.getElementById('inputTotalCollection').value = s.totalCollection    || 0;
-    document.getElementById('inputTotalPaid').value       = s.totalPaid          || 0;
-    document.getElementById('inputTotalUnpaid').value     = s.totalUnpaid        || 0;
+    document.getElementById('inputTotalCollection').value = s.totalCollection     || 0;
+    document.getElementById('inputTotalPaid').value       = s.totalPaid           || 0;
+    document.getElementById('inputTotalUnpaid').value     = s.totalUnpaid         || 0;
     document.getElementById('inputPendingMembers').value  = s.totalPendingMembers || 0;
-
     const badge = document.getElementById('modeBadge');
     badge.textContent = s.autoCalculated ? 'Auto Mode' : 'Manual Mode';
     badge.className   = 'mode-badge ' + (s.autoCalculated ? 'mode-auto' : 'mode-manual');
@@ -53,7 +71,7 @@ async function loadStats() {
   }
 }
 
-// ── Member dropdown for payment form ─────────
+// ── Member dropdown ───────────────────────────
 async function loadMemberDropdown() {
   try {
     const members = await Admin.getApproved();
@@ -68,19 +86,20 @@ async function loadMemberDropdown() {
   } catch (_) {}
 }
 
-// ── Approved members table ────────────────────
+// ── Approved members table — with Edit button ──
 async function loadApprovedMembers() {
   const tbody = document.getElementById('approvedMembersBody');
-  tbody.innerHTML = '<tr><td colspan="6" class="empty-state skeleton-row">Loading…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="7" class="empty-state skeleton-row">Loading…</td></tr>';
   try {
     const data    = await Admin.getDashboard();
     const members = data.members || [];
     document.getElementById('approvedCount').textContent = members.length + ' members';
 
     if (!members.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No approved members yet.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No approved members yet.</td></tr>';
       return;
     }
+
     tbody.innerHTML = members.map((m, i) => `
       <tr>
         <td>${i + 1}</td>
@@ -89,9 +108,21 @@ async function loadApprovedMembers() {
         <td class="pending-cell">${rupees(m.pending)}</td>
         <td>${escHtml(m.contact || '—')}</td>
         <td><span class="badge badge-approved">✅ Approved</span></td>
+        <td>
+          <button class="btn-edit-member"
+            data-action="edit"
+            data-id="${m.id}"
+            data-name="${escAttr(m.name)}"
+            data-phone="${escAttr(m.contact || '')}"
+            data-email="${escAttr(m.email || '')}"
+            data-address="${escAttr(m.address || '')}"
+            data-status="${escAttr(m.status || 'APPROVED')}">
+            ✏️ Edit
+          </button>
+        </td>
       </tr>`).join('');
   } catch (_) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Failed to load members.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Failed to load members.</td></tr>';
   }
 }
 
@@ -107,7 +138,6 @@ async function loadPendingMembers() {
       tbody.innerHTML = '<tr><td colspan="6" class="empty-state">🎉 No pending approvals!</td></tr>';
       return;
     }
-    // Use data-* attributes — NO inline onclick with string args (breaks on apostrophes)
     tbody.innerHTML = members.map((m, i) => `
       <tr>
         <td>${i + 1}</td>
@@ -117,17 +147,65 @@ async function loadPendingMembers() {
         <td>${fmtDate(m.registeredAt)}</td>
         <td>
           <button class="btn btn-approve btn-sm"
-            data-action="approve"
-            data-id="${m.id}"
+            data-action="approve" data-id="${m.id}"
             data-name="${escAttr(m.name)}">✅ Approve</button>
           <button class="btn btn-reject btn-sm"
-            data-action="reject"
-            data-id="${m.id}"
+            data-action="reject" data-id="${m.id}"
             data-name="${escAttr(m.name)}">❌ Reject</button>
         </td>
       </tr>`).join('');
   } catch (_) {
     tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Failed to load pending approvals.</td></tr>';
+  }
+}
+
+// ── EDIT MEMBER MODAL ─────────────────────────
+
+function openEditModal(member) {
+  document.getElementById('editMemberId').value = member.id;
+  document.getElementById('editName').value     = member.name        || '';
+  document.getElementById('editPhone').value    = member.phoneNumber || '';
+  document.getElementById('editEmail').value    = member.email       || '';
+  document.getElementById('editAddress').value  = member.address     || '';
+  document.getElementById('editStatus').value   = member.status      || 'APPROVED';
+  document.getElementById('editMemberModal').classList.add('active');
+}
+
+function closeEditModal() {
+  document.getElementById('editMemberModal').classList.remove('active');
+}
+
+async function saveEditMember() {
+  const id      = document.getElementById('editMemberId').value;
+  const name    = document.getElementById('editName').value.trim();
+  const phone   = document.getElementById('editPhone').value.trim();
+  const email   = document.getElementById('editEmail').value.trim();
+  const address = document.getElementById('editAddress').value.trim();
+  const status  = document.getElementById('editStatus').value;
+  const btn     = document.getElementById('btnSaveEdit');
+
+  if (!name) { showToast('⚠️ Name is required.', 'warning'); return; }
+
+  btn.disabled    = true;
+  btn.textContent = '💾 Saving…';
+
+  try {
+    await Admin.updateMember(id, {
+      name,
+      phoneNumber: phone,
+      email,
+      address,
+      status
+    });
+    showToast('✅ Member updated successfully!', 'success');
+    closeEditModal();
+    // Reload all data so changes reflect everywhere immediately
+    loadAllData();
+  } catch (err) {
+    showToast('❌ ' + err.message, 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '💾 Save Changes';
   }
 }
 
@@ -179,11 +257,8 @@ async function recordPayment(operation) {
 
   try {
     await Admin.recordPayment({
-      memberId:      parseInt(memberId),
-      amount,
-      paymentStatus: status,
-      operation,
-      note:          type
+      memberId: parseInt(memberId), amount,
+      paymentStatus: status, operation, note: type
     });
     showToast('✅ Payment recorded!', 'success');
     document.getElementById('paymentAmount').value = '';
@@ -200,8 +275,7 @@ async function recordPayment(operation) {
 // ── Manual stats save ─────────────────────────
 async function saveStatsManual() {
   const btn = document.getElementById('btnSaveManual');
-  btn.disabled    = true;
-  btn.textContent = '💾 Saving…';
+  btn.disabled = true; btn.textContent = '💾 Saving…';
   try {
     await Admin.updateStats({
       autoCalculate:       false,
@@ -215,16 +289,14 @@ async function saveStatsManual() {
   } catch (err) {
     showToast('❌ ' + err.message, 'error');
   } finally {
-    btn.disabled    = false;
-    btn.textContent = '💾 Save Manual Values';
+    btn.disabled = false; btn.textContent = '💾 Save Manual Values';
   }
 }
 
 // ── Auto-calc stats ───────────────────────────
 async function saveStatsAuto() {
   const btn = document.getElementById('btnAutoCalc');
-  btn.disabled    = true;
-  btn.textContent = '⚡ Calculating…';
+  btn.disabled = true; btn.textContent = '⚡ Calculating…';
   try {
     await Admin.updateStats({ autoCalculate: true });
     showToast('✅ Stats auto-calculated!', 'success');
@@ -233,8 +305,7 @@ async function saveStatsAuto() {
   } catch (err) {
     showToast('❌ ' + err.message, 'error');
   } finally {
-    btn.disabled    = false;
-    btn.textContent = '⚡ Auto-Calculate from Payments';
+    btn.disabled = false; btn.textContent = '⚡ Auto-Calculate from Payments';
   }
 }
 
@@ -245,8 +316,7 @@ async function sendAnnouncement() {
   const btn   = document.getElementById('btnAnnounce');
   if (!title) { showToast('⚠️ Enter a title.', 'warning'); return; }
   if (!msg)   { showToast('⚠️ Enter a message.', 'warning'); return; }
-  btn.disabled    = true;
-  btn.textContent = '📣 Sending…';
+  btn.disabled = true; btn.textContent = '📣 Sending…';
   try {
     await Admin.sendAnnouncement({ title, message: msg });
     showToast('📣 Sent to all members!', 'success');
@@ -255,7 +325,6 @@ async function sendAnnouncement() {
   } catch (err) {
     showToast('❌ ' + err.message, 'error');
   } finally {
-    btn.disabled    = false;
-    btn.textContent = '📣 Send to All';
+    btn.disabled = false; btn.textContent = '📣 Send to All';
   }
 }
