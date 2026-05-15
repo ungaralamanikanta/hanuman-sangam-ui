@@ -7,9 +7,7 @@
   <link rel="stylesheet" href="register.css">
 </head>
 <body>
-
 <div class="register-card">
-
   <!-- ── LEFT ──────────────────────────────────────────────── -->
   <div class="reg-left">
     <div class="logo-icon">🛕</div>
@@ -34,15 +32,11 @@
       </div>
     </div>
   </div>
-
   <!-- ── RIGHT ─────────────────────────────────────────────── -->
   <div class="reg-right">
     <h3>Create Account</h3>
-
     <div class="msg-box" id="msgBox"></div>
-
     <form id="registerForm" autocomplete="off" novalidate>
-
       <!-- NAME -->
       <div class="input-group">
         <label>Full Name</label>
@@ -53,7 +47,6 @@
                  pattern="[A-Za-z ]{3,}" required/>
         </div>
       </div>
-
       <!-- EMAIL -->
       <div class="input-group">
         <label>Email Address</label>
@@ -63,7 +56,6 @@
                  placeholder="Enter your email" required/>
         </div>
       </div>
-
       <!-- MOBILE -->
       <div class="input-group">
         <label>Mobile Number</label>
@@ -74,7 +66,6 @@
                  maxlength="10" inputmode="numeric" required/>
         </div>
       </div>
-
       <!-- OTP -->
       <div class="input-group">
         <label>OTP Verification</label>
@@ -91,7 +82,6 @@
           </button>
         </div>
       </div>
-
       <!-- PASSWORD -->
       <div class="input-group">
         <label>Password</label>
@@ -101,21 +91,21 @@
           <span class="pw-toggle" onclick="togglePw()">🙈</span>
         </div>
       </div>
-
       <button type="submit" class="btn-register" id="regBtn">
         <span id="regBtnText">Create Account 🙏</span>
         <span class="spinner" id="spinner"></span>
       </button>
-
     </form>
-
     <p class="reg-footer">
       Already registered? <a href="login.html">Sign in here</a>
     </p>
+    <!-- Contact help for registration issues -->
+    <p class="reg-footer" style="margin-top:.4rem;">
+      Facing issues? Contact us:
+      <a href="mailto:hanumansangamu@gmail.com">hanumansangamu@gmail.com</a>
+    </p>
   </div>
-
 </div>
-
 <div id="toast"></div>
 <script src="api.js"></script>
 <script src="common.js"></script>
